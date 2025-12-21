@@ -760,17 +760,20 @@
              output.storeNullable("CustomName", ComponentSerialization.CODEC, this.getCustomName());
              if (this.isCustomNameVisible()) {
                  output.putBoolean("CustomNameVisible", this.isCustomNameVisible());
-@@ -1998,9 +_,12 @@
+@@ -1998,9 +_,14 @@
                  output.putInt("TicksFrozen", this.getTicksFrozen());
              }
  
 -            if (this.hasVisualFire) {
 -                output.putBoolean("HasVisualFire", this.hasVisualFire);
+-            }
 +            // Paper start - improve visual fire API
 +            if (this.visualFire.equals(net.kyori.adventure.util.TriState.TRUE)) {
 +                output.putBoolean("HasVisualFire", true);
-             }
-+            output.putString("Paper.FireOverride", visualFire.name());
++            }
++            if (this.visualFire != net.kyori.adventure.util.TriState.NOT_SET) {
++                output.putString("Paper.FireOverride", visualFire.name());
++            }
 +            // Paper end
  
              if (!this.tags.isEmpty()) {
@@ -1265,16 +1268,6 @@
      }
  
      protected boolean canAddPassenger(Entity passenger) {
-@@ -2528,7 +_,8 @@
-                     TeleportTransition portalDestination = this.portalProcess.getPortalDestination(serverLevel, this);
-                     if (portalDestination != null) {
-                         ServerLevel level = portalDestination.newLevel();
--                        if (serverLevel.isAllowedToEnterPortal(level) && (level.dimension() == serverLevel.dimension() || this.canTeleport(serverLevel, level))
-+                        if (this instanceof ServerPlayer // CraftBukkit - always call event for players
-+                            || (level != null && (level.dimension() == serverLevel.dimension() || this.canTeleport(serverLevel, level))) // CraftBukkit
-                             )
-                          {
-                             this.teleport(portalDestination);
 @@ -2611,7 +_,7 @@
      }
  
