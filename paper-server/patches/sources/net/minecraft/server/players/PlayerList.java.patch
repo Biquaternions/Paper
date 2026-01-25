@@ -97,7 +97,8 @@
          serverGamePacketListenerImpl.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
          ServerStatus status = this.server.getStatus();
          if (status != null && !cookie.transferred()) {
-             player.sendServerStatus(status);
+-            player.sendServerStatus(status);
++            io.papermc.paper.network.ServerListJoinEventImpl.processRequest(this.server, player.connection.connection); // Paper - Fire ServerListJoinEvent
          }
  
 -        player.connection.send(ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(this.players));
