@@ -12,7 +12,7 @@
              Block.pushEntitiesUp(targetState, newState, level, pos);
              level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
              level.updateNeighbourForOutputSignal(pos, Blocks.END_PORTAL_FRAME);
-@@ -53,6 +_,22 @@
+@@ -53,6 +_,23 @@
              if (match != null) {
                  BlockPos blockPos = match.getFrontTopLeft().offset(-3, 0, -3);
  
@@ -32,14 +32,13 @@
 +                if (event.isCancelled()) {
 +                    return InteractionResult.PASS;
 +                }
++                // Paper end - Trigger PortalCreateEvent on end portal creation
                  for (int x = 0; x < 3; x++) {
                      for (int z = 0; z < 3; z++) {
                          BlockPos portalBlockPos = blockPos.offset(x, 0, z);
-@@ -60,8 +_,29 @@
-                         level.setBlock(portalBlockPos, Blocks.END_PORTAL.defaultBlockState(), Block.UPDATE_CLIENTS);
+@@ -61,7 +_,27 @@
                      }
                  }
-+                // Paper end - Trigger PortalCreateEvent on end portal creation
  
 -                level.globalLevelEvent(LevelEvent.SOUND_END_PORTAL_SPAWN, blockPos.offset(1, 0, 1), 0);
 +                // CraftBukkit start - Use relative location for far away sounds
