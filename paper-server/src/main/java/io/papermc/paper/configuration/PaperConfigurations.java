@@ -27,6 +27,7 @@ import io.papermc.paper.configuration.transformation.global.versioned.V30_Packet
 import io.papermc.paper.configuration.transformation.global.versioned.V31_AllowNetherPropertiesToConfig;
 import io.papermc.paper.configuration.transformation.world.FeatureSeedsGeneration;
 import io.papermc.paper.configuration.transformation.world.LegacyPaperWorldConfig;
+import io.papermc.paper.configuration.transformation.world.StructureSeedsGeneration;
 import io.papermc.paper.configuration.transformation.world.versioned.V29_ZeroWorldHeight;
 import io.papermc.paper.configuration.transformation.world.versioned.V30_RenameFilterNbtFromSpawnEgg;
 import io.papermc.paper.configuration.type.BooleanOrDefault;
@@ -303,7 +304,8 @@ public class PaperConfigurations extends Configurations<GlobalConfiguration, Wor
     }
 
     private static final List<Transformations.DefaultsAware> DEFAULT_AWARE_TRANSFORMATIONS = List.of(
-        FeatureSeedsGeneration::apply
+        FeatureSeedsGeneration::apply,
+        StructureSeedsGeneration::apply
     );
 
     @Override

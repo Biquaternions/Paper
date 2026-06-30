@@ -10,6 +10,7 @@ import io.papermc.paper.configuration.mapping.MergeMap;
 import io.papermc.paper.configuration.serializer.NbtPathSerializer;
 import io.papermc.paper.configuration.serializer.collection.map.ThrowExceptions;
 import io.papermc.paper.configuration.transformation.world.FeatureSeedsGeneration;
+import io.papermc.paper.configuration.transformation.world.StructureSeedsGeneration;
 import io.papermc.paper.configuration.type.BooleanOrDefault;
 import io.papermc.paper.configuration.type.DespawnRange;
 import io.papermc.paper.configuration.type.Duration;
@@ -59,6 +60,7 @@ import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.slf4j.Logger;
 import org.spigotmc.SpigotWorldConfig;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -562,6 +564,22 @@ public class WorldConfiguration extends ConfigurationPart {
         @PostProcess
         private void postProcess() {
             this.features.defaultReturnValue(-1);
+        }
+    }
+
+    @Setting(StructureSeedsGeneration.STRUCTURE_SEEDS_KEY)
+    public StructureSeeds structureSeeds;
+
+    public class StructureSeeds extends ConfigurationPart {
+        @SuppressWarnings("unused") // Is used in StructureSeedsGeneration
+        @Setting(StructureSeedsGeneration.GENERATE_KEY)
+        public boolean generateRandomSeedsForAll = false;
+        @Setting(StructureSeedsGeneration.STRUCTURES_KEY)
+        public Reference2IntMap<Holder<StructureSet>> structures = new Reference2IntOpenHashMap<>();
+
+        @PostProcess
+        private void postProcess() {
+            this.structures.defaultReturnValue(-1);
         }
     }
 
