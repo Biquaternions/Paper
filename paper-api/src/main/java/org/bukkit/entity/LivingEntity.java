@@ -16,6 +16,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.block.Block;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -995,12 +996,35 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
     <T> void setMemory(@NotNull MemoryKey<T> memoryKey, @Nullable T memoryValue);
 
     /**
+     * Get the sound volume at which this entity plays its sounds with.
+     *
+     * @return the sound volume of this entity
+     */
+    float getSoundVolume();
+
+    /**
+     * Get the sound pitch at which this entity plays its sounds with.
+     * Might not be constant across all invocations.
+     *
+     * @return the sound pitch of this entity
+     */
+    float getSoundPitch();
+
+    /**
      * Get the {@link Sound} this entity will make when damaged.
      *
      * @return the hurt sound, or null if the entity does not make any sound
      */
     @Nullable
     public Sound getHurtSound();
+
+    /**
+     * Get the {@link Sound} this entity will make when damaged by the given {@link DamageSource}.
+     *
+     * @param damageSource the damage source to get the hurt sound of
+     * @return the hurt sound, or null if the entity does not make any sound
+     */
+    @Nullable Sound getHurtSound(@NotNull DamageSource damageSource);
 
     /**
      * Get the {@link Sound} this entity will make on death.
@@ -1199,7 +1223,6 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      *
      * @param hand the hand that contains the item to be used
      */
-    @org.jetbrains.annotations.ApiStatus.Experimental
     void startUsingItem(@NotNull org.bukkit.inventory.EquipmentSlot hand);
 
     /**
@@ -1210,7 +1233,6 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      * This method does not make any guarantees about the effect of this method
      * as such depends on the entity and its state.
      */
-    @org.jetbrains.annotations.ApiStatus.Experimental
     void completeUsingActiveItem();
 
     /**
@@ -1496,7 +1518,6 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      *
      * @return the entity's combat tracker
      */
-    @ApiStatus.Experimental
     @NotNull CombatTracker getCombatTracker();
 
     /**

@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     idea
     id("io.papermc.paperweight.core")
-    id("io.papermc.fill.gradle") version "1.0.11"
+    id("io.papermc.fill.gradle") version "1.0.12"
 }
 
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
@@ -156,7 +156,7 @@ dependencies {
 
     // Spark
     implementation("me.lucko:spark-api:0.1-20240720.200737-2")
-    implementation("me.lucko:spark-paper:1.10.152")
+    implementation("me.lucko:spark-paper:1.10.172")
 }
 
 tasks.jar {
@@ -193,6 +193,15 @@ tasks.jar {
 // Compile tests with -parameters for better junit parameterized test names
 tasks.compileTestJava {
     options.compilerArgs.add("-parameters")
+}
+
+tasks.named<JavaCompile>(log4jPlugins.compileJavaTaskName) {
+    options.compilerArgs.addAll(
+        listOf(
+            "-Alog4j.graalvm.groupId=${project.group}",
+            "-Alog4j.graalvm.artifactId=${project.name}"
+        )
+    )
 }
 
 // Bump compile tasks to 1GB memory to avoid OOMs
@@ -266,7 +275,7 @@ fun TaskContainer.registerRunTask(
         // TODO - JB runtime 25 has issues with spark rn
         // vendor.set(JvmVendorSpec.JETBRAINS)
     })
-    //jvmArgs("-XX:+AllowEnhancedClassRedefinition")
+    jvmArgs(/*"-XX:+AllowEnhancedClassRedefinition", */"--enable-native-access=ALL-UNNAMED")
 
     if (rootProject.childProjects["test-plugin"] != null) {
         val testPluginJar = rootProject.project(":test-plugin").tasks.jar.flatMap { it.archiveFile }
@@ -281,6 +290,8 @@ fun TaskContainer.registerRunTask(
     }
     systemProperty("io.papermc.paper.suppress.sout.nags", true)
     systemProperty("paper.maxChatCommandInputSize", 32767)
+    systemProperty("paper.disableMigrationDelay", true)
+    systemProperty("paper.updatingMinecraft", providers.gradleProperty("updatingMinecraft").getOrElse("false").toBoolean())
 
     val memoryGb = providers.gradleProperty("paper.runMemoryGb").getOrElse("2")
     minHeapSize = "${memoryGb}G"

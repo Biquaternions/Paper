@@ -537,7 +537,7 @@
              }
  
              if (packet.includeData() && this.player.canUseGameMasterBlocks() && entity instanceof Avatar avatar) {
-@@ -746,22 +_,35 @@
+@@ -746,22 +_,36 @@
          }
      }
  
@@ -547,12 +547,13 @@
              Inventory inventory = this.player.getInventory();
              int slotWithExistingItem = inventory.findSlotMatchingItem(itemStack);
 +            // Paper start - Add PlayerPickItemEvent
++            final org.bukkit.inventory.ItemStack bukkitItem = itemStack.asBukkitCopy();
 +            final int sourceSlot = slotWithExistingItem;
 +            final int targetSlot = Inventory.isHotbarSlot(sourceSlot) ? sourceSlot : inventory.getSuitableHotbarSlot();
 +            final org.bukkit.entity.Player bukkitPlayer = this.player.getBukkitEntity();
 +            final io.papermc.paper.event.player.PlayerPickItemEvent event = entity != null
-+                ? new io.papermc.paper.event.player.PlayerPickEntityEvent(bukkitPlayer, entity.getBukkitEntity(), includeData, targetSlot, sourceSlot)
-+                : new io.papermc.paper.event.player.PlayerPickBlockEvent(bukkitPlayer, org.bukkit.craftbukkit.block.CraftBlock.at(this.player.level(), blockPos), includeData, targetSlot, sourceSlot);
++                ? new io.papermc.paper.event.player.PlayerPickEntityEvent(bukkitPlayer, entity.getBukkitEntity(), bukkitItem, includeData, targetSlot, sourceSlot)
++                : new io.papermc.paper.event.player.PlayerPickBlockEvent(bukkitPlayer, org.bukkit.craftbukkit.block.CraftBlock.at(this.player.level(), blockPos), bukkitItem, includeData, targetSlot, sourceSlot);
 +            if (!event.callEvent()) {
 +                return;
 +            }
@@ -1235,7 +1236,7 @@
                                      this.player.swing(hand, true);
                                  }
  
-@@ -1394,6 +_,15 @@
+@@ -1394,20 +_,24 @@
                                      && success.swingSource() == InteractionResult.SwingSource.SERVER) {
                                      this.player.swing(hand, true);
                                  }
@@ -1249,9 +1250,10 @@
 +                                }
 +                            // Paper end - Fix inventory desync
                              } else {
-                                 this.player.sendBuildLimitMessage(true, maxY);
+-                                this.player.sendBuildLimitMessage(true, maxY);
++                                // this.player.sendBuildLimitMessage(true, maxY); // Paper - Fix MC-306582: Fix build limit message being sent when it shouldn't be
                              }
-@@ -1401,13 +_,8 @@
+ 
                              this.send(new ClientboundBlockUpdatePacket(level, pos));
                              this.send(new ClientboundBlockUpdatePacket(level, pos.relative(direction)));
                          }
