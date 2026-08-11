@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/structure/placement/StructurePlacement.java
 +++ b/net/minecraft/world/level/levelgen/structure/placement/StructurePlacement.java
-@@ -79,14 +_,31 @@
+@@ -79,14 +_,30 @@
          return this.exclusionZone;
      }
  
@@ -10,14 +10,13 @@
 +        return this.isStructureChunk(state, sourceX, sourceZ, null);
 +    }
 +
-+    public boolean isStructureChunk(final ChunkGeneratorStructureState state, final int sourceX, final int sourceZ, final net.minecraft.resources.@org.jspecify.annotations.Nullable ResourceKey<StructureSet> structureSetKey) {
++    public boolean isStructureChunk(final ChunkGeneratorStructureState state, final int sourceX, final int sourceZ, final @org.jspecify.annotations.Nullable Holder<StructureSet> structureSet) {
 +        Integer saltOverride = null;
-+        if (structureSetKey != null) {
-+            if (structureSetKey == net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.MINESHAFTS) {
-+                saltOverride = state.conf.mineshaftSeed;
-+            } else if (structureSetKey == net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.BURIED_TREASURES) {
-+                saltOverride = state.conf.buriedTreasureSeed;
-+            }
++        if (structureSet != null &&
++            (structureSet.is(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.MINESHAFTS) || structureSet.is(net.minecraft.world.level.levelgen.structure.BuiltinStructureSets.BURIED_TREASURES)) &&
++            state.conf.structures.containsKey(structureSet)
++        ) {
++            saltOverride = state.conf.structures.getInt(structureSet);
 +        }
 +        // Paper end - Add missing structure set seed configs
          return this.isPlacementChunk(state, sourceX, sourceZ)

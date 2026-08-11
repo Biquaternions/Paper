@@ -6,7 +6,7 @@
  
 -    public ChunkGeneratorStructureState createState(final HolderLookup<StructureSet> structureSets, final RandomState randomState, final long legacyLevelSeed) {
 -        return ChunkGeneratorStructureState.createForNormal(randomState, legacyLevelSeed, this.biomeSource, structureSets);
-+    public ChunkGeneratorStructureState createState(final HolderLookup<StructureSet> structureSets, final RandomState randomState, final long legacyLevelSeed, final org.spigotmc.SpigotWorldConfig conf) { // Spigot
++    public ChunkGeneratorStructureState createState(final HolderLookup<StructureSet> structureSets, final RandomState randomState, final long legacyLevelSeed, final io.papermc.paper.configuration.WorldConfiguration.StructureSeeds conf) { // Spigot // Paper
 +        return ChunkGeneratorStructureState.createForNormal(randomState, legacyLevelSeed, this.biomeSource, structureSets, conf); // Spigot
      }
  
@@ -137,7 +137,7 @@
                          }
  
 -                        if (featurePlacement.isStructureChunk(state, sourceChunkPos.x(), sourceChunkPos.z())) {
-+                        if (featurePlacement.isStructureChunk(state, sourceChunkPos.x(), sourceChunkPos.z(), featurePlacement instanceof net.minecraft.world.level.chunk.ChunkGeneratorStructureState.KeyedRandomSpreadStructurePlacement keyed ? keyed.key : null)) { // Paper - Add missing structure set seed configs
++                        if (featurePlacement.isStructureChunk(state, sourceChunkPos.x(), sourceChunkPos.z(), set)) { // Paper - Add missing structure set seed configs
                              if (structures.size() == 1) {
                                  this.tryGenerateStructure(
                                      structures.get(0),
