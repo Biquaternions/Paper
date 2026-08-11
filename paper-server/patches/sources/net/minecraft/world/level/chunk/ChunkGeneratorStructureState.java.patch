@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
 +++ b/net/minecraft/world/level/chunk/ChunkGeneratorStructureState.java
-@@ -41,22 +_,50 @@
+@@ -41,22 +_,51 @@
      private final Map<ConcentricRingsStructurePlacement, CompletableFuture<List<ChunkPos>>> ringPositions = new Object2ObjectArrayMap<>();
      private boolean hasGeneratedPositions;
      private final List<Holder<StructureSet>> possibleStructureSets;
@@ -37,6 +37,7 @@
 +    // Paper end - Add missing structure set seed configs
 +
 +    // Spigot start
++    // Paper start - Add missing structure set seed configs
 +    private static List<Holder<StructureSet>> injectSpigot(final List<Holder<StructureSet>> list, final io.papermc.paper.configuration.WorldConfiguration.StructureSeeds conf) {
 +        return list.stream().map((holder) -> {
 +            net.minecraft.world.level.levelgen.structure.StructureSet structureset = holder.value();
